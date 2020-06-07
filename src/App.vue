@@ -72,7 +72,7 @@ export default {
     this.moisture = data['1536020820/humidity'].latestValue;
     this.indoorTemp = data['1536020820/temp'].latestValue;
     this.outdoorTemp = data['1536020830/temp'].latestValue;
-    this.roofOpen = data['5890480'].latestValue === 1 ? false: true;
+    this.roofOpen = data['5890480'].latestValue === 1;
   }
 }
 </script>
