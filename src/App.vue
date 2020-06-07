@@ -62,7 +62,11 @@ export default {
     const photoURL = photoData.latestPhoto;
     this.latestPhoto = photoURL;
 
-    const response = await fetch(process.env.VUE_APP_DATA_URL);
+    const response = await fetch(process.env.VUE_APP_DATA_URL, {
+      headers: new Headers({
+        'Authorization': process.env.VUE_APP_DATA_URL_AUTH
+      }),
+    });
     const data = await response.json();
     this.moisture = data['1536020820/humidity'].latestValue;
     this.indoorTemp = data['1536020820/temp'].latestValue;
