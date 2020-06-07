@@ -32,7 +32,7 @@ export default {
       indoorTemp: 0,
       outdoorTemp: 0,
       roofOpen: false,
-      overlayOpen: true,
+      overlayOpen: false,
       latestPhoto: '',
     }
   },
@@ -68,6 +68,7 @@ export default {
       }),
     });
     const data = await response.json();
+    this.overlayOpen = true;
     this.moisture = data['1536020820/humidity'].latestValue;
     this.indoorTemp = data['1536020820/temp'].latestValue;
     this.outdoorTemp = data['1536020830/temp'].latestValue;
