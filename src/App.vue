@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="webcam-container" :style="{ backgroundImage: `url(${latestPhoto})` }">
+    <div class="webcam-container" :style="{ backgroundImage: `url(${currentPhoto})` }">
     </div>
     <div class="overlay-container" v-show="overlayOpen">
       <DataOverlay
@@ -14,6 +14,9 @@
       <VisibleIcon v-show="!overlayOpen" v-on:click="showOverlay"/>
       <HiddenIcon v-show="overlayOpen" v-on:click="hideOverlay"/>
     </div>
+    <div class="tomato-icon">
+      <TomatoIcon v-on:click="showTomatoes"/>
+    </div>
 
   </div>
 </template>
@@ -22,6 +25,7 @@
 import DataOverlay from './components/DataOverlay.vue'
 import VisibleIcon from './assets/visible.svg';
 import HiddenIcon from './assets/hidden.svg';
+import TomatoIcon from './assets/tomato.svg';
 
 export default {
 
@@ -33,13 +37,17 @@ export default {
       outdoorTemp: 0,
       roofOpen: false,
       overlayOpen: false,
+      tomatoOverlay: false,
+      currentPhoto: '',
       latestPhoto: '',
+      latestOverlay: '',
     }
   },
   components: {
     DataOverlay,
     VisibleIcon,
-    HiddenIcon
+    HiddenIcon,
+    TomatoIcon,
   },
   methods: {
     showOverlay() {
@@ -49,6 +57,14 @@ export default {
     hideOverlay() {
       console.log('hide');
       this.overlayOpen = false;
+    },
+    showTomatoes() {
+      this.tomatoOverlay = !this.tomatoOverlay;
+      if (this.tomatoOverlay) {
+        this.currentPhoto = this.latestOverlay;
+      } else {
+        this.currentPhoto = this.latestPhoto;
+      }
     },
   },
   async created() {
@@ -61,6 +77,8 @@ export default {
     const photoData = await photoResponse.json();
     const photoURL = photoData.latestPhoto;
     this.latestPhoto = photoURL;
+    this.currentPhoto = photoURL;
+    this.latestOverlay = photoData.latestWithOverlay;
 
     const response = await fetch(process.env.VUE_APP_DATA_URL, {
       headers: new Headers({
@@ -99,6 +117,18 @@ export default {
     & > svg {
       fill: white;
     }
+  }
+
+  .tomato-icon {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 30px;
+    height: auto;
+    stroke: white;
+    & > svg {
+      fill: white;
+    } 
   }
 
   .webcam-container {
